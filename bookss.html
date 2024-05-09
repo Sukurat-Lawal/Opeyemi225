@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Book Library</title>
+        <style>
+           #bookDisplay {
+            margin-bottom: 30px;
+           }
+
+            .bookCard {
+                padding: 10px;
+                margin-bottom: 20px;
+                background-color: rgb(100, 100, 195);
+                color: white;
+                width: 30%;
+           }
+        </style>
+    </head>
+    <body>
+        <div id="bookDisplay"></div>
+        <button onclick="showForm()">NEW BOOK</button>
+        <div id="newBookForm" style="display: none;">
+            <form id="bookForm" onsubmit="addBook(event)">
+                <label for="title">Title:</label><br>
+                <input type="text" id="title" name="title" required><br>
+                <label for="author">Author:</label><br>
+                <input type="text" id="author" name="author" required><br>
+                <label for="pages">Number of Pages:</label><br>
+                <input type="number" id="pages" name="pages" required><br>
+                <label for="read">Have you read ths book?:</label><br>
+                <input type="checkbox" id="read" name="read" required><br>
+                <input type="submit" value="Add Book">
+            </form>
+        </div>
+        <script>
+            function Book(title, author, numPages, readStatus = false) {
+                this.title = title;
+                this.author = author;
+                this.numPages= numPages;
+                this.readStatus = readStatus;
+            }
+
+            function addBookToLibrary(book) {
+                library.push(book);
+                displayBooks();
+            }
+        
+            function displayBooks() {
+                let displayArea = document.getElementById("bookDisplay");
+                displayArea.innerHtml = "";
+         
+
+            library.forEach((book, index) => {
+                let bookCard = document.createElement("div");
+                bookCard.classList.add("bookCard");
+                bookCard.innerHTML = `
+                <p>Title: ${book.title}</p>
+                <p>Author: ${book.author}</p>
+                <p>Pages: ${book.numPages}</p>
+                <p>Read: <span id="readStatus${index}">${book.readStatus ? 'Yes' : 'No'}</span></p>
+                <button onclick="removeBook(${index})">Remove</button>
+                <button onclick="toggleReadStatus(${index})">Read Status</button>
+                `;
+                displayArea.appendChild(bookCard);
+            });
+        }
+        
+            function showForm() {
+                document.getElementById("newBookForm").style.display = "block";
+            }
+
+            function addBook(event) {
+                event.preventDefault();
+                let title = document.getElementById("title").value;
+                let author = document.getElementById("author").value;
+                let numPages = parseInt(document.getElementById("pages").value);
+                let readStatus = document.getElementById("read").checked;
+
+                let newBook = new Book(title, author, newPages, readStatus);
+                addBookToLibrary(newBook);
+                document.getElementById("bookForm").reset();
+                document.getElementById("newBookForm").style.display = "none";
+
+            }
+
+            function removeBook(index) {
+                library.splice(index, 1);
+                displayBooks();
+                }
+
+                function toggleReadStatus(index) {
+                    library[index].readStatus = !library[index].readStatus;
+                    displayBooks();
+                }
+
+                let library = [];
+
+                library.push(new Book("Things fall apart", "Chinua Achebe", 224, true));
+                library.push(new Book("Harry Potter and the Philosopher's Stone", "J.K. Rowling", 223, false));
+                library.push(new Book("Split Milk", "Kopano Matlwa", 195, true));
+
+
+                displayBooks();
+        </script>
+    </body>
+</html>
